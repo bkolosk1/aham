@@ -1,4 +1,4 @@
-# topic_eval_grid/llama.py
+# aham/llama.py
 import transformers
 from torch import cuda, bfloat16
 
@@ -9,13 +9,6 @@ TOKEN = "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"
 def load_llama_model(token=TOKEN):
     """
     Loads and returns the Llama-2 model and tokenizer.
-    
-    Parameters:
-      - token (str): Your Hugging Face token.
-    
-    Returns:
-      - model: The Llama-2 model.
-      - tokenizer: The corresponding tokenizer.
     """
     bnb_config = transformers.BitsAndBytesConfig(
         load_in_4bit=True,
@@ -37,12 +30,6 @@ def load_llama_model(token=TOKEN):
 def get_llama_generator(gen_params):
     """
     Returns a text-generation pipeline using Llama-2 with the specified generation parameters.
-    
-    Parameters:
-      - gen_params (dict): Dictionary of generation parameters (temperature, max_new_tokens, etc.)
-    
-    Returns:
-      - generator: A Hugging Face text-generation pipeline.
     """
     model, tokenizer = load_llama_model()
     generator = transformers.pipeline(

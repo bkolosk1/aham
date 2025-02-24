@@ -1,26 +1,24 @@
-# run_grid_search.py
-from aham.data import load_ml_arxiv_data
-from aham.config import get_grid
-from aham.grid_search import grid_search, select_best_configuration
+from aham import AHAMTopicModeling, get_grid, load_ida_dataset
 
 def main():
-    # Load dataset
-    abstracts, _ = load_ml_arxiv_data()
-    
-    # Get grid configurations
+    abstracts, _ = load_ida_dataset()
     grid = get_grid()
-    print(f"Total configurations to test: {len(grid)}")
+    print(f"Total grid configurations: {len(grid)}")
     
-    # Run grid search
-    results = grid_search(abstracts, grid)
+    # Initialize the estimator with a grid of configurations.
+    model = AHAMTopicModeling(grid=grid)
+    model.fit(abstracts)
+    print("\nBest configuration:")
+    print(model.best_config_)
+    print("AHAM Score:", model.best_aham_score_)
     
-    # Select the best configuration (assuming lower AHAM is preferred)
-    best_result = select_best_configuration(results, higher_better=False)
-    print("\n=== Best configuration ===")
-    print("AHAM Score:", best_result["aham_score"])
-    print("Configuration:")
-    for key, value in best_result["config"].items():
-        print(f"{key}: {value}")
+    # Predict topics for new documents.
+    new_docs = [
+        "Recent advances in machine learning have led to breakthroughs in natural language processing.",
+        "The study of climate change shows significant effects on global agriculture."
+    ]
+    topics = model.predict(new_docs)
+    print("\nPredicted topics for new documents:", topics)
 
 if __name__ == "__main__":
     main()

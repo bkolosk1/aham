@@ -1,4 +1,3 @@
-# topic_eval_grid/modeling.py
 from bertopic import BERTopic
 from bertopic.representation import KeyBERTInspired, MaximalMarginalRelevance, TextGeneration
 from umap import UMAP
@@ -10,15 +9,6 @@ def run_topic_modeling(abstracts, config):
     """
     Builds and fits a BERTopic model based on the supplied configuration.
     
-    Parameters:
-      - abstracts (list[str]): List of documents (abstracts).
-      - config (dict): Configuration dictionary with the following keys:
-          * "prompt": Custom prompt (str) for topic naming.
-          * "llama_gen_params": Dict of Llama2 generation parameters.
-          * "embedding_model_name": Name of the SentenceTransformer model for document embeddings.
-          * "umap_params": Dictionary of parameters for UMAP.
-          * "hdbscan_params": Dictionary of parameters for HDBSCAN.
-          
     Returns:
       - topic_model: The fitted BERTopic model.
       - topic_info: DataFrame with topic information.
@@ -33,7 +23,7 @@ def run_topic_modeling(abstracts, config):
     # Build the Llama2 generator.
     generator = get_llama_generator(config["llama_gen_params"])
     
-    # Build a full prompt for topic naming by combining a system prompt, an example, and the main prompt.
+    # Build a full prompt for topic naming.
     system_prompt = """
 <s>[INST] <<SYS>>
 You are a helpful, respectful and honest assistant for labeling topics.
@@ -54,7 +44,7 @@ Based on the information above, please create a short label of this topic. Make 
     main_prompt = config["prompt"]
     full_prompt = system_prompt + example_prompt + main_prompt
     
-    # Build the TextGeneration representation model using Llama2.
+    # Build the TextGeneration representation model.
     llama2_rep = TextGeneration(generator, prompt=full_prompt)
     
     # Instantiate additional representation models.
@@ -80,17 +70,11 @@ Based on the information above, please create a short label of this topic. Make 
     # Compute embeddings for abstracts.
     abstract_embeddings = embedding_model.encode(abstracts, show_progress_bar=True)
     topics, _ = topic_model.fit_transform(abstracts, embeddings=abstract_embeddings)
-    
-    # Extract Llama2-generated labels.
-    llama2_topics = topic_model.get_topics(full=True).get("Llama2", {})
-    llama2_labels = {}
-    for topic_id, label_info in llama2_topics.items():
-        if label_info and len(label_info) > 0:
-            label = label_info[0][0].split("\n")[0].strip()
-            llama2_labels[topic_id] = label
-        else:
-            llama2_labels[topic_id] = ""
+        
+    llama2_labels = [label[0][0].split("\n")[0] for label in topic_model.get_topics(full=True)["Llama2"].values()]
     topic_model.set_topic_labels(llama2_labels)
+
+    
     
     topic_info = topic_model.get_topic_info()
     return topic_model, topic_info
