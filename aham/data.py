@@ -4,7 +4,7 @@ from datasets import load_dataset
 def load_ml_arxiv_data(split="train"):
     """
     Loads the ML-ArXiv Papers dataset and returns abstracts and titles.
-    For testing, we only take the first 100 records.
+    For testing, only the first 100 records are used.
     """
     dataset = load_dataset("CShorten/ML-ArXiv-Papers")[split]
     abstracts = dataset["abstract"][:100]
@@ -16,6 +16,6 @@ def load_ida_dataset():
     Loads a dataset from a local TSV file 'id2tiab.tsv'.
     """
     dataset = pd.read_csv('id2tiab.tsv', delimiter='\t').dropna().reset_index(drop=True)
-    abstracts = dataset['abstract']
-    titles = dataset["title"]
+    abstracts = dataset['abstract'].tolist()
+    titles = dataset["title"].tolist()
     return abstracts, titles

@@ -1,16 +1,21 @@
-# aham/grid_search.py
-
-from .modeling import run_topic_modeling
-from .evaluation import compute_aham_objective, load_sem_model
+from aham.modeling import run_topic_modeling
+from aham.evaluation import compute_aham_objective, load_sem_model
+from aham.llama import cleanup_llama_models
 import logging
+import gc
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 def grid_search(abstracts, grid):
     """
-    Runs grid search over provided configurations.
-    Returns a list of dicts containing config, AHAM score, topic info, and fitted topic_model.
+    Runs grid search over the provided configurations.
+    Returns a list of dictionaries containing:
+      - "config": The configuration used.
+      - "aham_score": The computed AHAM score.
+      - "topic_info": The topic information DataFrame.
+      - "topic_model": The fitted BERTopic model.
+    Frees GPU and CPU memory after each configuration evaluation.
     """
     results = []
     total = len(grid)
@@ -18,7 +23,7 @@ def grid_search(abstracts, grid):
         logger.info(f"Running configuration {idx+1}/{total}")
         try:
             topic_model, topic_info = run_topic_modeling(abstracts, config)
-            topic_names = {row["Topic"]: row["Llama2"] for _, row in topic_info.iterrows()}
+            topic_names = {row["Topic"]: row["Name"] for _, row in topic_info.iterrows()}
             outlier_topic_ids = {-1}
             sem_model = load_sem_model(config["sem_model_name"])
             aham_score = compute_aham_objective(
@@ -31,11 +36,21 @@ def grid_search(abstracts, grid):
                 "config": config,
                 "aham_score": aham_score,
                 "topic_info": topic_info,
-                "topic_model": topic_model
+                "topic_names": topic_names
             })
-            logger.info(f"Config {idx+1}: AHAM Score = {aham_score}")
+            logger.info(f"Configuration {idx+1}: AHAM Score = {aham_score}")
         except Exception as e:
             logger.error(f"Error with configuration {idx+1}: {e}")
+        finally:
+            cleanup_llama_models()
+            del topic_model
+            del topic_info
+            gc.collect()
+            try:
+                import torch
+                torch.cuda.empty_cache()
+            except ImportError:
+                pass
     return results
 
 def select_best_configuration(results, higher_better=True):
