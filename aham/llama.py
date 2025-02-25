@@ -1,15 +1,20 @@
 # aham/llama.py
+
 import transformers
 from torch import cuda, bfloat16
+import logging
 
-# Define model id and token (replace with your actual token)
-MODEL_ID = 'meta-llama/Llama-2-7b-chat-hf'
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+MODEL_ID = 'google/gemma-2-2b'
 TOKEN = "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"
 
 def load_llama_model(token=TOKEN):
     """
     Loads and returns the Llama-2 model and tokenizer.
     """
+    logger.info("Loading Llama-2 model...")
     bnb_config = transformers.BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_quant_type='nf4',
@@ -25,11 +30,12 @@ def load_llama_model(token=TOKEN):
         token=token
     )
     model.eval()
+    logger.info("{MODEL_ID} model loaded.")
     return model, tokenizer
 
 def get_llama_generator(gen_params):
     """
-    Returns a text-generation pipeline using Llama-2 with the specified generation parameters.
+    Returns a text-generation pipeline using Llama-2 with specified parameters.
     """
     model, tokenizer = load_llama_model()
     generator = transformers.pipeline(
