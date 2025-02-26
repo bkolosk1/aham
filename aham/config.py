@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 DEFAULT_MODEL_ID = "mistralai/Mistral-7B-Instruct-v0.3"
-DEFAULT_TOKEN = "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" 
+DEFAULT_TOKEN = "" 
 DEFAULT_LLAMA_GEN_PARAMS = {"temperature": 0.1, "max_new_tokens": 300, "repetition_penalty": 1.1}
 
 DEFAULT_EMBEDDING_MODELS = [
