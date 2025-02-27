@@ -1,5 +1,5 @@
 from aham.data import load_ml_arxiv_data, load_ida_dataset
-from aham.llama import load_gen_model, get_llama_generator, cleanup_llama_models
+from aham.llm import load_gen_model, get_llm_generator, cleanup_llm_models
 from aham.evaluation import (
     semantic_similarity,
     fuzzy_similarity,
@@ -16,8 +16,8 @@ __all__ = [
     "load_ml_arxiv_data",
     "load_ida_dataset",
     "load_gen_model",
-    "get_llama_generator",
-    "cleanup_llama_models",
+    "get_llm_generator",
+    "cleanup_llm_models",
     "semantic_similarity",
     "fuzzy_similarity",
     "compute_topic_similarity",

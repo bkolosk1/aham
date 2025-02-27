@@ -1,4 +1,5 @@
-# AHAM
+# AHAM [![arXiv](https://img.shields.io/badge/arXiv-2312.15784-b31b1b.svg)](https://arxiv.org/abs/2312.15784) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1fkMqefRjq4P78XvaYNnRaZi_30SdXeCA?usp=sharing) 
+
 
 AHAM adapts a topic modeling framework to a specific domain by minimizing the AHAM metric, as introduced in [AHAM: Adapt, Help, Ask, Model - Harvesting LLMs for literature mining](https://arxiv.org/pdf/2312.15784). By doing so, it reduces the proportion of outlier topics and lowers the lexical or semantic similarity between the generated topic labels, resulting in more distinct and domain-relevant topics.
 
@@ -29,7 +30,7 @@ pip install git+https://github.com/bkolosk1/aham
 
 1. Clone the repository:
     ```
-    git clone ttps://github.com/bkolosk1/aham
+    git clone https://github.com/bkolosk1/aham
     cd aham
     ```
 2. Install dependencies and enter the Poetry shell:

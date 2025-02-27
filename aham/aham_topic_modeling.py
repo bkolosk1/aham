@@ -8,15 +8,12 @@ logger.setLevel(logging.INFO)
 
 class AHAMTopicModeling(BaseEstimator, TransformerMixin):
     """
-    A scikit‑learn estimator for topic modeling that:
-      A) Stores the topic names.
-      B) Stores the topic model predictor (the fitted BERTopic model).
-      C) Implements a score method that computes the AHAM score using either fuzzy or semantic matching.
+    A scikit‑learn estimator for topic modeling built on top of BERTopic
     """
     def __init__(self, config, topic_similarity_method="semantic"):
         """
         Parameters:
-          - config: A configuration dictionary (loaded from YAML or defined in code).
+          - config: A configuration dictionary 
           - topic_similarity_method: "semantic" or "fuzzy" (default "semantic").
         """
         self.config = config
@@ -32,7 +29,6 @@ class AHAMTopicModeling(BaseEstimator, TransformerMixin):
         logger.info("Fitting AHAMTopicModeling...")
         topic_model, topic_info = run_topic_modeling(X, self.config)
         self.topic_model_ = topic_model
-        # Assume topic names are in the "Name" column.
         self.topic_names_ = {row["Topic"]: row["Name"] for _, row in topic_info.iterrows()}
         logger.info("Model fitted; topic names stored.")
         return self

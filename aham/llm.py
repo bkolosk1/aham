@@ -1,21 +1,21 @@
 import transformers
-from torch import cuda, bfloat16
+from torch import bfloat16
 import logging
 import gc
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-GLOBAL_LLAMA_MODEL_CACHE = {}
+GLOBAL_LLM_MODEL_CACHE = {}
 
 def load_gen_model(model_id, token=""):
     """
     Loads and returns the text-generation model and tokenizer for the given model_id.
     Uses a global cache to ensure the model is loaded only once.
     """
-    if model_id in GLOBAL_LLAMA_MODEL_CACHE:
+    if model_id in GLOBAL_LLM_MODEL_CACHE:
         logger.info(f"Using cached model for: {model_id}")
-        return GLOBAL_LLAMA_MODEL_CACHE[model_id]
+        return GLOBAL_LLM_MODEL_CACHE[model_id]
     logger.info(f"Loading model: {model_id}")
     bnb_config = transformers.BitsAndBytesConfig(
         load_in_4bit=True,
@@ -32,18 +32,18 @@ def load_gen_model(model_id, token=""):
         token=token
     )
     model.eval()
-    GLOBAL_LLAMA_MODEL_CACHE[model_id] = (model, tokenizer)
+    GLOBAL_LLM_MODEL_CACHE[model_id] = (model, tokenizer)
     logger.info(f"Model {model_id} loaded and cached.")
     return model, tokenizer
 
-def get_llama_generator(config):
+def get_llm_generator(config):
     """
     Returns a text-generation pipeline using the model specified in config.
     """
     model_id = config.get("model_id")
     token = config.get("token", "")
     model, tokenizer = load_gen_model(model_id, token)
-    gen_params = config.get("llama_gen_params", {})
+    gen_params = config.get("llm_gen_params", {})
     generator = transformers.pipeline(
         model=model,
         tokenizer=tokenizer,
@@ -55,15 +55,15 @@ def get_llama_generator(config):
     prompt = tokenizer.apply_chat_template(config.get("chat_template"), tokenize=False)
     return generator, prompt
 
-def cleanup_llama_models():
+def cleanup_llm_models():
     """
-    Deletes all loaded Llama models from the cache and clears GPU memory.
+    Deletes all loaded LLM models from the cache and clears GPU memory.
     """
-    global GLOBAL_LLAMA_MODEL_CACHE
-    logger.info("Cleaning up loaded Llama models...")
-    for key in list(GLOBAL_LLAMA_MODEL_CACHE.keys()):
-        del GLOBAL_LLAMA_MODEL_CACHE[key]
-    GLOBAL_LLAMA_MODEL_CACHE.clear()
+    global GLOBAL_LLM_MODEL_CACHE
+    logger.info("Cleaning up loaded LLM models...")
+    for key in list(GLOBAL_LLM_MODEL_CACHE.keys()):
+        del GLOBAL_LLM_MODEL_CACHE[key]
+    GLOBAL_LLM_MODEL_CACHE.clear()
     gc.collect()
     try:
         import torch

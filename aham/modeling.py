@@ -3,7 +3,7 @@ from bertopic.representation import KeyBERTInspired, MaximalMarginalRelevance, T
 from umap import UMAP
 from hdbscan import HDBSCAN
 from sentence_transformers import SentenceTransformer as STModel
-from aham.llama import get_llama_generator, cleanup_llama_models
+from aham.llm import get_llm_generator, cleanup_llm_models
 import logging
 
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ def run_topic_modeling(abstracts, config):
     umap_model = UMAP(**config["umap_params"])
     hdbscan_model = HDBSCAN(**config["hdbscan_params"], prediction_data=True)
     
-    generator, full_prompt = get_llama_generator(config)
+    generator, full_prompt = get_llm_generator(config)
     
     logger.info("Constructed full prompt for topic labeling.")
     
@@ -60,5 +60,5 @@ def run_topic_modeling(abstracts, config):
 
     logger.info("Topic modeling complete.")
     
-    cleanup_llama_models()    
+    cleanup_llm_models()    
     return topic_model, topic_info

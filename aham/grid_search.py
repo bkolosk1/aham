@@ -1,6 +1,6 @@
 from aham.modeling import run_topic_modeling
 from aham.evaluation import compute_aham_objective, load_sem_model
-from aham.llama import cleanup_llama_models
+from aham.llm import cleanup_llm_models
 import logging
 import gc
 
@@ -15,7 +15,6 @@ def grid_search(abstracts, grid):
       - "aham_score": The computed AHAM score.
       - "topic_info": The topic information DataFrame.
       - "topic_model": The fitted BERTopic model.
-    Frees GPU and CPU memory after each configuration evaluation.
     """
     results = []
     total = len(grid)
@@ -42,7 +41,7 @@ def grid_search(abstracts, grid):
         except Exception as e:
             logger.error(f"Error with configuration {idx+1}: {e}")
         finally:
-            cleanup_llama_models()
+            cleanup_llm_models()
             del topic_model
             del topic_info
             gc.collect()

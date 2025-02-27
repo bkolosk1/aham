@@ -58,7 +58,7 @@ def get_grid():
     Returns a list of configuration dictionaries for grid search.
     Each configuration includes:
       - chat_template,
-      - model_id, token, llama_gen_params,
+      - model_id, token, llm_gen_params,
       - embedding_model_name,
       - umap_params,
       - hdbscan_params,
@@ -76,7 +76,7 @@ def get_grid():
             "chat_template": DEFAULT_CHAT_TEMPLATE,
             "model_id": DEFAULT_MODEL_ID,
             "token": DEFAULT_TOKEN,
-            "llama_gen_params": DEFAULT_LLAMA_GEN_PARAMS,
+            "llm_gen_params": DEFAULT_LLAMA_GEN_PARAMS,
             "embedding_model_name": emb_model,
             "umap_params": umap_params,
             "hdbscan_params": hdb_params,
