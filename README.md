@@ -9,7 +9,7 @@ The AHAM metric is defined as:
 
 $$
 \text{AHAM} = 2 \times \left(\frac{|\text{outliers}|}{|\text{topics}|}\right) \times \text{(average pairwise topic similarity)}
-$$"
+$$
 
 This metric combines the ratio of outlier topics to total topics with the average pairwise similarity of topic labels. Minimizing this metric drives the adaptation process, ensuring that topics are both distinct and well-aligned with the target domain.
 
