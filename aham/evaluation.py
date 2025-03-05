@@ -19,7 +19,7 @@ def semantic_similarity(text_a, text_b, sem_model):
     """
     Computes cosine similarity between two texts using the provided semantic model.
     """
-    emb_a = sem_model.encode(text_a, convert_to_numpy=True)
+    emb_a = sem_model.encode(text_a, convert_to_numpy=True).T
     emb_b = sem_model.encode(text_b, convert_to_numpy=True)
     sim = np.dot(emb_a, emb_b) / (norm(emb_a) * norm(emb_b))
     return sim

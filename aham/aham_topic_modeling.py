@@ -29,7 +29,7 @@ class AHAMTopicModeling(BaseEstimator, TransformerMixin):
         logger.info("Fitting AHAMTopicModeling...")
         topic_model, topic_info = run_topic_modeling(X, self.config)
         self.topic_model_ = topic_model
-        self.topic_names_ = {row["Topic"]: row["Name"] for _, row in topic_info.iterrows()}
+        self.topic_names_ = {row["Topic"]: row["Llama2"] for _, row in topic_info.iterrows()}
         logger.info("Model fitted; topic names stored.")
         return self
 
