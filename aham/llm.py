@@ -1,6 +1,7 @@
 import transformers
 from torch import bfloat16
 import logging
+import os
 import gc
 
 logger = logging.getLogger(__name__)
@@ -41,7 +42,7 @@ def get_llm_generator(config):
     Returns a text-generation pipeline using the model specified in config.
     """
     model_id = config.get("model_id")
-    token = config.get("token", "")
+    token = config.get("token", os.getenv('HF_TOKEN'))
     model, tokenizer = load_gen_model(model_id, token)
     gen_params = config.get("llm_gen_params", {})
     generator = transformers.pipeline(

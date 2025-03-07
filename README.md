@@ -1,5 +1,4 @@
-# AHAM [![arXiv](https://img.shields.io/badge/arXiv-2312.15784-b31b1b.svg)](https://arxiv.org/abs/2312.15784) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1fkMqefRjq4P78XvaYNnRaZi_30SdXeCA?usp=sharing) 
-
+# AHAM [![arXiv](https://img.shields.io/badge/arXiv-2312.15784-b31b1b.svg)](https://arxiv.org/abs/2312.15784) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1fkMqefRjq4P78XvaYNnRaZi_30SdXeCA?usp=sharing)
 
 AHAM adapts a topic modeling framework to a specific domain by minimizing the AHAM metric, as introduced in [AHAM: Adapt, Help, Ask, Model - Harvesting LLMs for literature mining](https://arxiv.org/pdf/2312.15784). By doing so, it reduces the proportion of outlier topics and lowers the lexical or semantic similarity between the generated topic labels, resulting in more distinct and domain-relevant topics.
 
@@ -37,6 +36,23 @@ pip install git+https://github.com/bkolosk1/aham
     ```
     poetry install
     ```
+
+## Hugging Face Setup
+
+Before running the example, please ensure you have a valid Hugging Face token and have subscribed to the required model.
+
+1. **Set your Hugging Face token:**
+
+   Export your token as an environment variable by running:
+   ```
+   export HF_TOKEN="your_token_here"
+   ```
+   
+   To generate a token, log in to your Hugging Face account and navigate to [Hugging Face Tokens](https://huggingface.co/settings/tokens). Create a new token with the necessary scopes (typically, read access to models is sufficient).
+
+2. **Subscribe to the model:**
+
+   If the model you intend to use requires subscription or acceptance of specific terms, go to the model’s page on Hugging Face. Click on the **Subscribe** (or **Accept Model License**) button to gain access. This step is necessary if the model is behind a subscription or access gate.
 
 ## Usage
 
@@ -77,20 +93,21 @@ def main():
     predicted_topics = estimator.predict(new_docs)
     logging.info(f"Predicted topics for new documents: {predicted_topics}")
 
+if __name__ == "__main__":
+    main()
 ```
+
 Run the example with:
 ```
 python example.py
 ```
 
 This can result these topic names:
-``
+```
 Extracted topics: {-1: 'Literature-based Discovery Systems (LDS) for Medical Problem Solving', 0: 'Literature-Based Discovery Systems for Cross-Domain Knowledge Discovery', 1: 'Gene-Disease Literature Mining for Biomarker Discovery and Drug Repositioning', 2: 'Neural Network-based Literature-based Discovery (LBD) for Knowledge Graph Prediction and Association Discovery', 3: 'Semantic Graph Database-based Literature-Based Discovery (LBD)', 4: 'Biomedical Semantic-based Novel Connection Discovery from Literature', 5: 'Literature-Based Discovery Systems in Biomedical Domain', 6: 'Biomedical Literature Connection Discovery System (LitLinker)', 7: 'Literature-based Future Connection Prediction via Temporal KCNs and LSTM', 8: '"Complementary Noninteractive Literature Search Algorithm"', 9: 'Predication-based Semantic Indexing (PSI) for Analogical Reasoning and Therapeutic Discovery', 10: 'Literature-based Discovery Approaches for Biological Relationship Extraction', 11: 'Literature-based Drug Discovery & Repurposing'}
-``
+```
 
-
-
-## Citation 
+## Citation
 
 If you use this code; please cite our work:
 ```
@@ -112,4 +129,3 @@ address="Cham",
 pages="254--265",
 isbn="978-3-031-58547-0"
 }
-```
